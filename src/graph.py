@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import Optional, Dict
 
 import matplotlib.pyplot as plt
 import seaborn as sb
@@ -43,12 +43,23 @@ def plot_boxplot(
         categories: Optional[Dict[str, str]] = None
 ):
     df = df.sort_values(by=[col_x])
-    for key in categories:
-        df[col_x] = df[col_x].replace(key, categories[key])
-
+    df[col_x] = replace_df_value_by_str(df[col_x], categories)
     df[col_y] = df[col_y].astype(float)
     ax = sb.boxplot(x=df[col_x], y=df[col_y])
     set_title_axis(ax, title, xlabel, ylabel)
+    plt.show()
+
+
+def plot_catplot_box(
+        df: DataFrame, col_x: str, col_y: str,
+        xlabel: Optional[str] = None, ylabel: Optional[str] = None,
+        categories: Optional[Dict[str, str]] = None
+):
+    df = df.sort_values(by=col_x, ascending=True)
+    df[col_y] = df[col_y].astype(float)
+    df[col_x] = replace_df_value_by_str(df[col_x], categories)
+    ax = sb.catplot(x=col_x, y=col_y, kind='boxen', data=df, height=8)
+    ax.set_axis_labels(xlabel, ylabel)
     plt.show()
 
 
@@ -61,7 +72,14 @@ def plot_histogram(
     plt.show()
 
 
-def plot_pie_graph(labels: List[str], values: List[int], title: Optional[str]):
+def plot_pie_graph(
+        df: DataFrame, x_col: str, categories: Dict[str, str],
+        title: Optional[str]
+):
+    count: Dict[str, int] = df[x_col].value_counts()
+    values = [count[value] for value in count.index.tolist()]
+    labels = [categories[value] for value in count.index.tolist()]
+
     total = sum(values)
     labels_perct = ['%s (%2.1f%%)' % (labels[i], values[i] / total * 100)
                     for i in range(len(labels))]

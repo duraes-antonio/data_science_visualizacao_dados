@@ -98,10 +98,7 @@ def main():
 
     # Gráficos de pizza
     for g in pie_graphs:
-        count: Dict[str, int] = df[g.x_col].value_counts()
-        values = [count[ans] for ans in g.label_categories]
-        labels = list(g.label_categories.values())
-        plot_pie_graph(labels, values, g.title)
+        plot_pie_graph(df, g.x_col, g.label_categories, g.title)
 
     # Gráficos boxplot
     for g in boxplot_graphs:
