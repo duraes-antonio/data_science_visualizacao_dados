@@ -1,5 +1,4 @@
 import os.path as path
-from typing import List, Dict
 
 import pandas as pd
 
@@ -12,10 +11,6 @@ def export_each_column_to_csv(file_read_path: str, colums_names: List[str], sep=
 
     for col in colums_names:
         df[col].to_csv(f"{path.join(dirname, col)}.csv", sep, index=False, header=True)
-
-
-def str_num_to_float(num_str: str) -> float:
-    return float(num_str.split()[0].replace(',', '.'))
 
 
 def main():
